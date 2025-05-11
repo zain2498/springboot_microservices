@@ -7,18 +7,20 @@ import net.javaguideszain.employeeservice.dto.EmployeeDto;
 import net.javaguideszain.employeeservice.entity.Employee;
 import net.javaguideszain.employeeservice.mapper.EmployeeMapper;
 import net.javaguideszain.employeeservice.repository.EmployeeRepository;
+import net.javaguideszain.employeeservice.service.APIClient;
 import net.javaguideszain.employeeservice.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @AllArgsConstructor
 public class EmployeeServiceImplementation implements EmployeeService {
 
     EmployeeRepository employeeRepository;
-    RestTemplate restTemplate;
-
+    //    RestTemplate restTemplate;
+    private APIClient apiClient;
 
     @Override
     public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
@@ -42,10 +44,21 @@ public class EmployeeServiceImplementation implements EmployeeService {
                 () -> new RuntimeException("Employee not found")
         );
 
-        ResponseEntity<DepartmentDto> departmentDtoResponseEntity = restTemplate.getForEntity("http://localhost:9091/api/v1/department/" + existingEmployee.getDepartmentCode(),
-                DepartmentDto.class);
-        DepartmentDto departmentDto = departmentDtoResponseEntity.getBody();
-        EmployeeDto employeeDto= EmployeeMapper.mapToEmployeeDto(existingEmployee);
+        /*FOR REST TEMPLATE */
+//        ResponseEntity<DepartmentDto> departmentDtoResponseEntity = restTemplate.getForEntity("http://localhost:9091/api/v1/department/" + existingEmployee.getDepartmentCode(),
+//                DepartmentDto.class);
+//        DepartmentDto departmentDto = departmentDtoResponseEntity.getBody();
+        EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(existingEmployee);
+
+//        /*FOR WEBCLIENT*/
+//       DepartmentDto departmentDto = webClient.get()
+//                .uri("http://localhost:9091/api/v1/department/" + existingEmployee.getDepartmentCode())
+//                .retrieve()
+//                .bodyToMono(DepartmentDto.class)
+//                .block();
+
+        /*FOR OPENFEIGN LIBRARY*/
+        DepartmentDto departmentDto = apiClient.getDepartmentByCode(existingEmployee.getDepartmentCode());
 
         ApiResponseDto apiResponseDto = new ApiResponseDto();
         apiResponseDto.setEmployeeDto(employeeDto);
