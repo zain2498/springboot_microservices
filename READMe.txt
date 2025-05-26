@@ -37,7 +37,7 @@ CONFIG SERVER will externalize the configurations of all the microservices prese
 Distributed technique ki help se hum flow of request ju k multiple services se propagate hu rhi huti hain usko track kr sakte hain path or un services k path ko trace kr sakte hain k koi b specific req kin kin services se huti hwi ayi ha isey problem ko identify krna, failures ko pakarna, bottlenecks findout krna or overall system ko monitor karna easy hujata ha developer or operator k liye or system ki performance be behtar hujati hay.
 
 
-Each microsercie can be loosely coupled.
+Each microservice can be loosely coupled.
 
 
 
